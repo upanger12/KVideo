@@ -9,7 +9,8 @@ import type { VideoItem } from '@/lib/types';
  * Check if title contains at least 2 consecutive characters from search query
  * This filters out irrelevant results
  */
-export function hasMinimumMatch(title: string, query: string): boolean {
+export function hasMinimumMatch(title: string | null | undefined, query: string): boolean {
+  if (!title) return false;
   const normalizedTitle = title.toLowerCase();
   const normalizedQuery = query.toLowerCase().trim();
 
@@ -31,7 +32,12 @@ export function hasMinimumMatch(title: string, query: string): boolean {
 export function calculateRelevanceScore(item: VideoItem, query: string): number {
   let score = 0;
   const normalizedQuery = query.toLowerCase().trim();
-  const normalizedTitle = item.vod_name.toLowerCase();
+  const normalizedTitle = (item.vod_name || '').toLowerCase();
+
+  // Guard: if title is empty, return 0
+  if (!item.vod_name || !normalizedTitle.trim()) {
+    return 0;
+  }
 
   // Split query into words for partial matching
   const queryWords = normalizedQuery.split(/\s+/);
