@@ -1,6 +1,6 @@
 import { Video } from '@/lib/types';
 import { getSourceName } from '@/lib/utils/source-names';
-import { calculateRelevanceScore, hasMinimumMatch } from '@/lib/utils/search';
+import { calculateRelevanceScore } from '@/lib/utils/search';
 import { settingsStore } from '@/lib/store/settings-store';
 
 /**
@@ -63,7 +63,6 @@ export async function processSearchStream({
                     onStart(data.totalSources);
                 } else if (data.type === 'videos') {
                     const newVideos: Video[] = data.videos
-                        .filter((video: any) => hasMinimumMatch(video.vod_name, currentQuery))
                         .filter((video: any) => !isCategoryBlocked(video, blockedCategories))
                         .map((video: any) => ({
                             ...video,
